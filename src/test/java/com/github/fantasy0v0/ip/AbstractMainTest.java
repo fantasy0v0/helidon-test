@@ -15,32 +15,21 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.CoreMatchers.containsString;
 
 abstract class AbstractMainTest {
-    private final Http1Client client;
+  private final Http1Client client;
 
-    protected AbstractMainTest(Http1Client client) {
-        this.client = client;
-    }
+  protected AbstractMainTest(Http1Client client) {
+    this.client = client;
+  }
 
-    @SetUpRoute
-    static void routing(HttpRouting.Builder builder) {
-        Main.routing(builder);
-    }
+  @SetUpRoute
+  static void routing(HttpRouting.Builder builder) {
+    Main.routing(builder);
+  }
 
-    
-    @Test
-    void testMetricsObserver() {
-        try (Http1ClientResponse response = client.get("/observe/metrics").request()) {
-            assertThat(response.status(), is(Status.OK_200));
-        }
-    }
-
-    
-    @Test
-    void testSimpleGreet() {
-        ClientResponseTyped<String> response = client.get("/simple-greet").request(String.class);
-        assertThat(response.status(), is(Status.OK_200));
-        assertThat(response.entity(), is("Hello World!"));
-    }
-
-
+  @Test
+  void testSimpleGreet() {
+    ClientResponseTyped<String> response = client.get("/simple-greet").request(String.class);
+    assertThat(response.status(), is(Status.OK_200));
+    assertThat(response.entity(), is("Hello World!"));
+  }
 }

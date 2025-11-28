@@ -2,14 +2,16 @@ package com.github.fantasy0v0.ip;
 
 import io.helidon.logging.common.LogConfig;
 import io.helidon.config.Config;
+import io.helidon.service.registry.Services;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.HttpRouting;
+
+import java.util.logging.Logger;
 
 /**
  * The application main class.
  */
 public class Main {
-
 
   /**
    * Cannot be instantiated.
@@ -17,21 +19,19 @@ public class Main {
   private Main() {
   }
 
-
   /**
    * Application main entry point.
    *
    * @param args command line arguments.
    */
-  public static void main(String[] args) {
-
+  static void main(String[] args) {
     // load logging configuration
     LogConfig.configureRuntime();
+    final Logger logger = Logger.getLogger(Main.class.getName());
 
     // initialize global config from default configuration
     Config config = Config.create();
-    Config.global(config);
-
+    Services.set(Config.class, config);
 
     WebServer server = WebServer.builder()
       .config(config.get("server"))
@@ -39,11 +39,8 @@ public class Main {
       .build()
       .start();
 
-
-    System.out.println("WEB server is up! http://localhost:" + server.port() + "/simple-greet");
-
+    logger.info(() -> "WEB server is up! http://localhost:" + server.port() + "/simple-greet");
   }
-
 
   /**
    * Updates HTTP Routing.
